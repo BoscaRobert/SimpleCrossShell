@@ -11,17 +11,19 @@ echo "ChainProcess; Comanda curenta este: $currentComand"
 #la fel ca un script bash.
 
 #Verificam daca comanda este prima din chain, daca este, se va executa direct si va crea un fisier temporar, 
-#daca nu, va citi input-ul din fisierul temp
+#daca nu, va citi input-ul din fisierul temp, si il va sterge dupa
 if [ "$3" = 1 ]; then
     rezultat="$($currentComand)"
-    echo "rexultatul primei comenzii este $rezultat"
     dataExecutie=$(date)
+    echo "rexultatul primei comenzii este $rezultat"
 else
     tempo=$5
     rezultat="$($currentComand < "$tempo")"
+    dataExecutie=$(date)
     echo "rexultatul comenzii curente este $rezultat"
     echo "aceasta a preluat datele din $tempo"
-    dataExecutie=$(date)
+    rm "$tempo"
+    echo "Fisierul temporar a fost sters"
 fi
 
 #verificam daca se logheaza, in cazul in care da, scriem data executiei si comanda care urmeaza sa fie executata

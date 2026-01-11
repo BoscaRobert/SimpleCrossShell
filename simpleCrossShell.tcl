@@ -25,10 +25,10 @@ grid .c -column 0 -row 0 -sticky nwes
 grid .c.fereastraConsola -column 1 -row 2 -sticky wesn -rowspan 4
 grid .c.fereastraButoane -column 2 -row 2 -sticky wesn -rowspan 4
 
-set defBG "gray15" 
-set defFG "white"
-set usrcol "green"
-set dircol "blue"
+set defBG "#242424" 
+set defFG "#F2FFFF"
+set usrcol "#37FF00"
+set dircol "#00FFDC"
 
 grid [text .c.fereastraConsola.con -wrap word -background $defBG -foreground $defFG] -column 1 -row 2 -sticky wesn -rowspan 3
 

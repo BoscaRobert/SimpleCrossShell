@@ -43,8 +43,10 @@ do
    # se Incepe lantul de comenzi, primul argument este comanda, al doilea optiunea de a loga sau nu comenziile
    #executate (0/1), al treilea argument reprezinta daca este primul din sir sau nu (1/0), al patrulea directorul original,
    #si al cincelea, daca e cazul, fisierul temporar
-   "$og"/Bash_Chain.sh "$com" $logheaza 1 "$og"
+   "$og"/Bash_Chain.sh "$com" $logheaza 1 "$og" &
 done
+
+wait
 
 #setam noul (sau acelasi ) director
 echo $(pwd)>"$og"/current_directory
