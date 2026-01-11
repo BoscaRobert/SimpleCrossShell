@@ -1,0 +1,27 @@
+total 144
+drwxr-xr-x  3 robert robert  4096 Jan 11 18:49 .
+drwxr-xr-x 18 robert robert  4096 Jan 11 18:35 ..
+-rwxr-xr-x  1 robert robert  1921 Jan 11 18:51 Bash_Chain.sh
+prw-r--r--  1 robert robert     0 Jan 11 18:51 comSend
+-rw-r--r--  1 robert robert    31 Jan 11 18:51 current_directory
+-rwxr-xr-x  1 robert robert  1881 Jan 11 18:41 Exec_main_linux.sh
+drwxr-xr-x  8 robert robert  4096 Jan 11 04:45 .git
+-rw-r--r--  1 robert robert 10777 Jan  7 22:21 icon.gif
+-rwxr-xr-x  1 robert robert  3851 Jan 11 04:02 Interfata.tcl
+-rw-r--r--  1 robert robert   289 Jan 11 04:43 log.txt
+-rw-------  1 robert robert   101 Jan 11 04:41 .log.txt.kate-swp
+-rw-r--r--  1 robert robert    85 Jan 10 19:47 output
+prw-r--r--  1 robert robert     0 Jan 11 18:49 outstream
+-rw-------  1 robert robert  1222 Jan 11 18:43 procPipe39J
+-rw-------  1 robert robert  1458 Jan 11 18:49 procPipe6Hg
+-rw-------  1 robert robert  1399 Jan 11 18:46 procPipe8UX
+-rw-------  1 robert robert  1281 Jan 11 18:43 procPipecVX
+-rw-------  1 robert robert     1 Jan 11 18:39 procPipeJhE
+-rw-------  1 robert robert     1 Jan 11 18:42 procPipeKGW
+-rw-------  1 robert robert     1 Jan 11 18:41 procPipendF
+-rw-------  1 robert robert     1 Jan 11 18:37 procPipesZK
+-rw-------  1 robert robert     1 Jan 11 18:41 procPipeYtu
+-rw-------  1 robert robert     1 Jan 11 18:39 procPipeYZI
+-rw-------  1 robert robert  1340 Jan 11 18:45 procPipezrc
+-rw-r--r--  1 robert robert     0 Jan 10 19:20 running
+-rw-r--r--  1 robert robert 48293 Jan  7 21:24 test.jpeg

@@ -9,7 +9,6 @@ if [ "$1" = "log" ] ; then
    logheaza=1
 fi
 
-
 #salvam directorul aplicatiei, dat prin al doilea atribut, in cazul in care directorul curent va fi schimbat de comanda
 og=$2
 
@@ -26,7 +25,7 @@ touch "$og"/current_directory
 
 #luam comanda/comenziile care vor fi executate fin fifo-ul transmis de scriptul tcl
 comanda=$(cat<"$og"/comSend)
-echo "$comanda"
+echo "Sa primit comanda sau sirul de comenzi: $comanda"
 
 #transformam comanda intr-o lista de comenzi in cazul in care acestea sunt combinate
 IFS=';' read -ra listaComenzi <<< "$comanda"
@@ -34,7 +33,7 @@ IFS=';' read -ra listaComenzi <<< "$comanda"
 #parcurgem toate comenziile, si pentru fiecare comanda vom porni un lant de executie
 for com in "${listaComenzi[@]}"
 do
-   echo "$com"
+   echo "Pornire Chain Process pentru $com"
    #Verificam daca prima comanda este cd. daca este, schimbam directorul
    if [ $(echo "$com" | cut -d'|' -f1 | grep 'cd' | wc -w) -ge 1 ]; then
       echo "schimb director"
@@ -42,7 +41,8 @@ do
       eval $(echo "$com" | cut -d'|' -f1)
    fi
    # se Incepe lantul de comenzi, primul argument este comanda, al doilea optiunea de a loga sau nu comenziile
-   #executate (0/1), al treilea argument reprezinta daca este primul din sir sau nu (1/0), si al patrulea directorul original
+   #executate (0/1), al treilea argument reprezinta daca este primul din sir sau nu (1/0), al patrulea directorul original,
+   #si al cincelea, daca e cazul, fisierul temporar
    "$og"/Bash_Chain.sh "$com" $logheaza 1 "$og"
 done
 
