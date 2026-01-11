@@ -1,7 +1,15 @@
 #!/usr/bin/env tclsh
 
 set OS $tcl_platform(platform)
+
+#salvam directorul original
+set DIR $env(PWD)
+
 puts "Platforma detectat : $OS"
+
+if {![file exists ./comSend]} {
+    exec mkfifo comSend
+}
 
 package require Tk
 wm title . "SimpleCrossShell"
@@ -44,7 +52,6 @@ grid rowconfigure .c 2 -weight 1
 grid columnconfigure .c.fereastraConsola 1 -weight 1
 grid rowconfigure .c.fereastraConsola 2 -weight 1
 
-
 set workingDir $env(PWD)
 set user "not-logged@cross-shell"
 
@@ -59,6 +66,7 @@ proc insertPrompt {} {
     global user
     global workingDir
     global last
+    global DIR
     .c.fereastraConsola.con insert end "\n$user" usr
     .c.fereastraConsola.con insert end ":" dff
     .c.fereastraConsola.con insert end "$workingDir" dir
@@ -69,7 +77,7 @@ proc insertPrompt {} {
 proc getText {} {
     global last
 
-    set returnText [.c.fereastraConsola.con get $last end ]
+    set returnText [.c.fereastraConsola.con get $last end-1c ]
     set last [.c.fereastraConsola.con index "end-1c" ]
     return $returnText
 }
@@ -83,17 +91,39 @@ proc insertText {arg } {
 proc pornire_exec_linux {} {
     global prompt
     global last
-    set pid [exec "./Exec_main_linux.sh" &]
-    puts $pid
-
-    while {[file exists "/proc/$pid"]} {
-        set f [open "./outstream" r]
-        set argument [read $f]
-        close $f
-        insertText "1test"
-        puts test
-        insertText $argument
+    global DIR
+    global workingDir
+    global env
+    set comanda [getText]
+    if {$comanda eq ""} {
+        puts eroare
+        insertText "Eroare, Nu a fost inserata nicio comanda"
+        insertPrompt
+        return
     }
+
+    puts $env(PWD)
+    set pid [exec "$DIR\/Exec_main_linux.sh" nolog $DIR $env(PWD) &]
+    puts $pid
+    exec echo "$comanda" > "$DIR\/comSend"
+
+    set fifo [open "$DIR\/outstream" r]
+    fconfigure $fifo -blocking 0 
+    set output ""
+    while {!("$output" == "TERM")} {
+        after 100
+        set output [gets $fifo]
+        if {!($output == "") && !("$output" == "TERM")} {
+            insertText $output
+        }
+    }
+    close $fifo
+    set f [open "$DIR\/current_directory" r]
+    set env(PWD) [gets $f]
+    close $f
+    set workingDir $env(PWD)
+    puts executat
+    puts $env(PWD)
     insertPrompt
 }
 

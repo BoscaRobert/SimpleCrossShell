@@ -1,0 +1,11 @@
+
+
+
+ , Executat comanda: ls -la
+Sun Jan 11 04:41:24 AM EET 2026 , Executat comanda: ls -la
+La Sun Jan 11 04:43:01 AM EET 2026 , s-a executat comanda: ls -la
+
+La Sun Jan 11 04:43:18 AM EET 2026 , s-a executat comanda: cd ~
+
+La Sun Jan 11 04:43:24 AM EET 2026 , s-a executat comanda: ls -la
+
