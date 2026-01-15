@@ -1,11 +1,7 @@
-
-
-
- , Executat comanda: ls -la
-Sun Jan 11 04:41:24 AM EET 2026 , Executat comanda: ls -la
-La Sun Jan 11 04:43:01 AM EET 2026 , s-a executat comanda: ls -la
-
-La Sun Jan 11 04:43:18 AM EET 2026 , s-a executat comanda: cd ~
-
-La Sun Jan 11 04:43:24 AM EET 2026 , s-a executat comanda: ls -la
-
+Thu Jan 15 01:19:23 AM EET 2026 : ls -l \n
+Thu Jan 15 01:21:13 AM EET 2026 :  cd /home \n
+Thu Jan 15 01:21:13 AM EET 2026 :  echo "how are you today sir"  \n
+Thu Jan 15 01:21:13 AM EET 2026 :  ls -la \n
+Thu Jan 15 01:21:13 AM EET 2026 :  tr 'a-z' 'A-Z' \n
+Thu Jan 15 04:37:48 AM EET 2026 :  echo HelloWorld  \n
+Thu Jan 15 04:37:48 AM EET 2026 :  tr 'a-z' 'A-Z' \n

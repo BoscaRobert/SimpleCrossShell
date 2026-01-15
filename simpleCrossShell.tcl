@@ -22,8 +22,8 @@ ttk::frame .c.fereastraConsola -padding 10 -borderwidth 2 -relief sunken
 ttk::frame .c.fereastraButoane -padding 10 -borderwidth 2 -relief sunken 
 
 grid .c -column 0 -row 0 -sticky nwes
-grid .c.fereastraConsola -column 1 -row 2 -sticky wesn -rowspan 4
-grid .c.fereastraButoane -column 2 -row 2 -sticky wesn -rowspan 4
+grid .c.fereastraConsola -column 1 -row 2 -sticky wesn -rowspan 6
+grid .c.fereastraButoane -column 2 -row 2 -sticky wesn -rowspan 6
 
 set defBG "#242424" 
 set defFG "#F2FFFF"
@@ -39,9 +39,13 @@ grid [text .c.fereastraConsola.con -wrap word -background $defBG -foreground $de
 
 
 grid [ttk::button .c.fereastraButoane.butonExec -text "Executa" -command "executa"] -column 2 -row 2 -sticky nsew
-grid [ttk::button .c.fereastraButoane.butonLog -text "Executa\n     si\nlogeaza" -command "log"] -column 2 -row 3 -sticky nsew
-grid [ttk::button .c.fereastraButoane.butonLogOut -text "Log\n In" -command "login"] -column 2 -row 4 -sticky nsew
-grid [ttk::button .c.fereastraButoane.butonLogIn -text "Log\nOut" -command "logout"] -column 2 -row 5 -sticky nsew
+grid [ttk::checkbutton .c.fereastraButoane.checkbuttonLog -text "Logheaza" -variable seLogheaza -onvalue log -offvalue nolog] -column 2 -row 3 -sticky nsew
+grid [ttk::label .c.fereastraButoane.labelUsername -text {username:}] -column 2 -row 4 -sticky nsew
+grid [ttk::entry .c.fereastraButoane.fieldUsername -textvariable username] -column 2 -row 5 -sticky nsew
+grid [ttk::label .c.fereastraButoane.labelPassword -text {password:}] -column 2 -row 6 -sticky nsew
+grid [ttk::entry .c.fereastraButoane.fieldPassword -textvariable password -show "*"] -column 2 -row 7 -sticky nsew
+grid [ttk::button .c.fereastraButoane.butonLogOut -text "Log In" -command "login"] -column 2 -row 8 -sticky nsew
+grid [ttk::button .c.fereastraButoane.butonLogIn -text "Log Out" -command "logout"] -column 2 -row 9 -sticky nsew
 
 grid columnconfigure . 0 -weight 1
 grid rowconfigure . 0 -weight 1
@@ -94,6 +98,7 @@ proc pornire_exec_linux {} {
     global DIR
     global workingDir
     global env
+    global seLogheaza
     set comanda [getText]
     if {$comanda eq ""} {
         puts eroare
@@ -103,7 +108,7 @@ proc pornire_exec_linux {} {
     }
 
     puts $env(PWD)
-    set pid [exec "$DIR\/Exec_main_linux.sh" nolog $DIR $env(PWD) &]
+    set pid [exec "$DIR\/Exec_main_linux.sh" $seLogheaza $DIR $env(PWD) &]
     puts $pid
     exec echo "$comanda" > "$DIR\/comSend"
 
@@ -133,4 +138,51 @@ proc executa {} {
     if { $OS == "unix"} {
         pornire_exec_linux
     }
+}
+
+proc login {} {
+    global user
+    global DIR
+    global username
+    global password
+    global OS
+    if {![info exists username]} {
+        insertText "Trebuie Introdus un username"
+        insertPrompt
+        return
+    }
+    if {![info exists password]} {
+        insertText "Trebuie Introdus o parola"
+        insertPrompt
+        return
+    }
+
+    if {$OS == "unix"} {
+    set hash [exec echo -n "$password" | sha256sum ]
+    set hashcod [lindex [split $hash] 0]
+    } else {
+        set hashcod [exec Get-StringHash -String "$password" -Algorithm SHA256]
+    }
+
+    #Citire fiecare linie pana gasim utilizatorul
+    set f [open "$DIR/usrs.txt"]
+    while {[gets $f line] >= 0} {
+        set tempname [lindex [split $line ";" ] 0]
+        set temppass [lindex [split $line ";"] 1]
+        if {"$tempname" == "$username"} {
+            if {"$hashcod" == "$temppass"} {
+                set user "$tempname\@crosshell"
+                insertText "Logat cu succes ca $user"
+                insertPrompt
+                return
+            } else {
+                insertText "Username sau parola Incorecta"
+                insertPrompt
+                return
+            }
+        }
+    }
+    insertText "Nu s-a gasit username-ul"
+    insertPrompt
+    return
 }

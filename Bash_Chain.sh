@@ -28,7 +28,7 @@ fi
 
 #verificam daca se logheaza, in cazul in care da, scriem data executiei si comanda care urmeaza sa fie executata
 if [ "$2" == 1 ]; then
-    echo "$dataExecutie : $currentComand \n">"$4"/log.txt
+    echo "$dataExecutie : $currentComand \n">>"$4"/log.txt
 fi
 
 # daca nu mai exista pipe-uri in script inseamna ca s-au terminat toate procesele, deci trimitem outputul functiei la outstream si nu mai executam nimic
