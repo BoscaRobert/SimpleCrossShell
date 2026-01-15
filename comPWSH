@@ -1,0 +1,1 @@
+ls -la | cat | tr 'a-z' 'A-Z'

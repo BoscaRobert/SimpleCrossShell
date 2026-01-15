@@ -1,7 +1,12 @@
-Thu Jan 15 01:19:23 AM EET 2026 : ls -l \n
-Thu Jan 15 01:21:13 AM EET 2026 :  cd /home \n
-Thu Jan 15 01:21:13 AM EET 2026 :  echo "how are you today sir"  \n
-Thu Jan 15 01:21:13 AM EET 2026 :  ls -la \n
-Thu Jan 15 01:21:13 AM EET 2026 :  tr 'a-z' 'A-Z' \n
-Thu Jan 15 04:37:48 AM EET 2026 :  echo HelloWorld  \n
-Thu Jan 15 04:37:48 AM EET 2026 :  tr 'a-z' 'A-Z' \n
+11:05:18:dir
+11:11:58 PowerShell a executat: dir
+11:16:04 PowerShell a executat: Get-Content ./log.txt 
+11:16:04 PowerShell a executat:  Measure-Object -Word
+11:19:56 PowerShell a executat: Get-Process notepad 
+11:19:56 PowerShell a executat:  Stop-Process
+11:20:53 PowerShell a executat: Get-Process qbittorent 
+11:20:53 PowerShell a executat:  Stop-Process
+11:24:44 PowerShell a executat: dir 
+11:24:44 PowerShell a executat:  split "\ "
+11:36:53 PowerShell a executat: ls -la 
+11:36:53 PowerShell a executat:  cat

@@ -37,6 +37,7 @@ grid [text .c.fereastraConsola.con -wrap word -background $defBG -foreground $de
 .c.fereastraConsola.con tag configure dfb -background $defBG
 .c.fereastraConsola.con tag configure dff -foreground $defFG
 
+set seLogheaza nu
 
 grid [ttk::button .c.fereastraButoane.butonExec -text "Executa" -command "executa"] -column 2 -row 2 -sticky nsew
 grid [ttk::checkbutton .c.fereastraButoane.checkbuttonLog -text "Logheaza" -variable seLogheaza -onvalue log -offvalue nolog] -column 2 -row 3 -sticky nsew
@@ -111,6 +112,47 @@ proc pornire_exec_linux {} {
     set pid [exec "$DIR\/Exec_main_linux.sh" $seLogheaza $DIR $env(PWD) &]
     puts $pid
     exec echo "$comanda" > "$DIR\/comSend"
+    exec echo "$comanda" > "$DIR\/comPWSH"
+
+    set fifo [open "$DIR\/outstream" r]
+    fconfigure $fifo -blocking 0 
+    set output ""
+    while {!("$output" == "TERM")} {
+        after 100
+        set output [gets $fifo]
+        if {!($output == "") && !("$output" == "TERM")} {
+            insertText $output
+        }
+    }
+    close $fifo
+    set f [open "$DIR\/current_directory" r]
+    set env(PWD) [gets $f]
+    close $f
+    set workingDir $env(PWD)
+    puts executat
+    puts $env(PWD)
+    insertPrompt
+}
+
+proc pornire_exec_win {} {
+    global prompt
+    global last
+    global DIR
+    global workingDir
+    global env
+    global seLogheaza
+    set comanda [getText]
+    if {$comanda eq ""} {
+        puts eroare
+        insertText "Eroare, Nu a fost inserata nicio comanda"
+        insertPrompt
+        return
+    }
+
+    exec echo "$comanda" > "$DIR\/comPWSH"
+    puts $env(PWD)
+    set pid [exec "$DIR\/Exec_main_win.ps1" $seLogheaza $DIR $env(PWD) &]
+    puts $pid
 
     set fifo [open "$DIR\/outstream" r]
     fconfigure $fifo -blocking 0 
@@ -137,6 +179,8 @@ proc executa {} {
     global last
     if { $OS == "unix"} {
         pornire_exec_linux
+    } else {
+        pornire_exec_win
     }
 }
 
