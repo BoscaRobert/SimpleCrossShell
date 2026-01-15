@@ -186,3 +186,9 @@ proc login {} {
     insertPrompt
     return
 }
+
+proc logout {} {
+    global user
+    set user "not-logged@cross-shell"
+    insertPrompt
+}
