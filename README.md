@@ -16,6 +16,12 @@ To run the program, use the tcl shell to run the simpleCrossShell.tcl script
 ```bash
 tclsh simpleCrossShell.tcl
 ```
+## How to use
+The program works similar to a terminal. You input commands in the textbox, but instead of pressing Enter to execute the command(s), you have to press the "Executa" button
+If the "Logheaza" checkbox is checked, the program will log each command executed in a local `log.txt` file
+The authentication system does not authenticate actual system users,it simulates a user login system using a local `users.txt` file.txt
+
+You can configure the window size and color palette by editing the `config.xml` file
 
 ## Platform Support
 Linux - supported
