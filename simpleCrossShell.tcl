@@ -17,9 +17,16 @@ if { $OS == "unix" } {
     if {![file exists ./comSend]} {
         exec mkfifo comSend
     }
+    if {![file exists ./outstream]} {
+        exec mkfifo outstream
+    }
 } else {
     if {![file exists ./comPWSH]} {
         exec mkfifo comPWSH
+    }
+    if {![file exists ./outstream]} {
+        set outfile [open outstream w]
+        close $outfile
     }
 }
 #Aici se configureaza variabilele temei GUI-ului
