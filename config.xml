@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <theme>
+        <background>"#003249"</background>
+        <foreground>"#ff26b7"</foreground>
+        <user>"#d3cf00"</user>
+        <dir>""#0bff17""</dir>
+    </theme>
+    <window>
+        <title>"SimpleCrossShell"</title>
+        <width>512</width>
+        <height>512</height>
+    </window>
+</config>

@@ -1,21 +1,92 @@
 #!/usr/bin/env tclsh
 
+#Tk este folosit pentru GUI
+package require Tk
+#tdom este folosit pentru XML parsing
+package require tdom
+
+#salvam directorul script-ului
+set DIR [file dirname [info script]]
+
+#detectam platforma
 set OS $tcl_platform(platform)
-
-#salvam directorul original
-set DIR $env(PWD)
-
 puts "Platforma detectat : $OS"
 
-if {![file exists ./comSend]} {
-    exec mkfifo comSend
+#comSend/comPWSH este pipe-ul prin care procesul in lant de executie comunica cu interfata grafica
+if { $OS == "unix" } {
+    if {![file exists ./comSend]} {
+        exec mkfifo comSend
+    }
+} else {
+    if {![file exists ./comPWSH]} {
+        exec mkfifo comPWSH
+    }
+}
+#Aici se configureaza variabilele temei GUI-ului
+#Incarcam valorile default in cazul in care apar probleme cu documentul de configurare
+set defBG "#242424" 
+set defFG "#F2FFFF"
+set usrcol "#37FF00"
+set dircol "#00FFDC"
+set TITLE "Simple Cross Shell"
+set WIDTH 512
+set HEIGHT 256
+
+#Incercam sa incarcam din XML
+set CONFIG "config.xml"
+if {[file exists "$DIR/$CONFIG"]} {
+    set dom [dom parse -channel [open "$DIR/$CONFIG" r]]
+    set doc [$dom documentElement]
+
+    if {[catch {
+        set bgValue [ [$doc selectNodes "/config/theme/background"] asText ]
+        if {$bgValue ne ""} {
+            set defBG [string trim $bgValue "\""]
+        }
+        
+        set fgValue [ [$doc selectNodes "/config/theme/foreground"] asText ]
+        if {$fgValue ne ""} {
+            set defFG [string trim $fgValue "\""]
+        }
+        
+        set usrValue [ [$doc selectNodes "/config/theme/user"] asText ]
+        if {$usrValue ne ""} {
+            set usrcol [string trim $usrValue "\""]
+        }
+        
+        set dirValue [ [$doc selectNodes "/config/theme/dir"] asText ]
+        if {$dirValue ne ""} {
+            set dircol [string trim $dirValue "\""]
+        }
+
+        set titleNode [$doc selectNodes "/config/window/title"]
+            if {$titleNode ne ""} {
+                set TITLE [string trim [$titleNode asText] "\""]
+            }
+            
+            set widthNode [$doc selectNodes "/config/window/width"]
+            if {$widthNode ne ""} {
+                set WIDTH [string trim [$widthNode asText] "\""]
+            }
+            
+            set heightNode [$doc selectNodes "/config/window/height"]
+            if {$heightNode ne ""} {
+                set HEIGHT [string trim [$heightNode asText] "\""]
+            }
+        
+        $dom delete
+        
+    }]} {
+        puts "A aparut o eroare la incarcarea XML-ului"
+    }
+} else {
+    puts "Fisierul config.xml nu exista"
 }
 
-package require Tk
-wm title . "SimpleCrossShell"
-wm minsize . 512 256
-wm iconphoto . [image create photo -file ./icon.gif]
-
+#Crearea de fereastra
+wm title . $TITLE
+wm minsize . $WIDTH $HEIGHT
+wm iconphoto . [image create photo -file $DIR\/icon.gif]
 ttk::frame .c -padding "3 3 12 12" -borderwidth 2
 
 ttk::frame .c.fereastraConsola -padding 10 -borderwidth 2 -relief sunken 
@@ -24,11 +95,6 @@ ttk::frame .c.fereastraButoane -padding 10 -borderwidth 2 -relief sunken
 grid .c -column 0 -row 0 -sticky nwes
 grid .c.fereastraConsola -column 1 -row 2 -sticky wesn -rowspan 6
 grid .c.fereastraButoane -column 2 -row 2 -sticky wesn -rowspan 6
-
-set defBG "#242424" 
-set defFG "#F2FFFF"
-set usrcol "#37FF00"
-set dircol "#00FFDC"
 
 grid [text .c.fereastraConsola.con -wrap word -background $defBG -foreground $defFG] -column 1 -row 2 -sticky wesn -rowspan 3
 
@@ -92,7 +158,7 @@ proc insertText {arg } {
     .c.fereastraConsola.con insert $last "\n$arg"
     set last [.c.fereastraConsola.con index "end-1c" ]
 }
-
+#Procedura de pornire a scriptului de executie pentru Linux
 proc pornire_exec_linux {} {
     global prompt
     global last
@@ -102,7 +168,7 @@ proc pornire_exec_linux {} {
     global seLogheaza
     set comanda [getText]
     if {$comanda eq ""} {
-        puts eroare
+        puts "eroare"
         insertText "Eroare, Nu a fost inserata nicio comanda"
         insertPrompt
         return
@@ -112,12 +178,12 @@ proc pornire_exec_linux {} {
     set pid [exec "$DIR\/Exec_main_linux.sh" $seLogheaza $DIR $env(PWD) &]
     puts $pid
     exec echo "$comanda" > "$DIR\/comSend"
-    exec echo "$comanda" > "$DIR\/comPWSH"
 
     set fifo [open "$DIR\/outstream" r]
     fconfigure $fifo -blocking 0 
     set output ""
     while {!("$output" == "TERM")} {
+        update
         after 100
         set output [gets $fifo]
         if {!($output == "") && !("$output" == "TERM")} {
@@ -134,6 +200,7 @@ proc pornire_exec_linux {} {
     insertPrompt
 }
 
+#Procedura de pornire a scriptului de executie pentru Windows
 proc pornire_exec_win {} {
     global prompt
     global last
@@ -143,7 +210,7 @@ proc pornire_exec_win {} {
     global seLogheaza
     set comanda [getText]
     if {$comanda eq ""} {
-        puts eroare
+        puts "eroare"
         insertText "Eroare, Nu a fost inserata nicio comanda"
         insertPrompt
         return
@@ -158,6 +225,7 @@ proc pornire_exec_win {} {
     fconfigure $fifo -blocking 0 
     set output ""
     while {!("$output" == "TERM")} {
+        update
         after 100
         set output [gets $fifo]
         if {!($output == "") && !("$output" == "TERM")} {
@@ -174,6 +242,7 @@ proc pornire_exec_win {} {
     insertPrompt
 }
 
+#se porneste script-ul de executie fan-out then in lant.
 proc executa {} {
     global OS
     global last
@@ -184,6 +253,9 @@ proc executa {} {
     }
 }
 
+#Aceasta functie nu logheaza un utilizator de sistem, ci un mockup de utilizator 
+#din fisierul users.txt. Nu are nici un folos practic, implementat doar pentru proiect.
+#Autentificarea reala ar fi durat mult prea mult de implementat.
 proc login {} {
     global user
     global DIR
