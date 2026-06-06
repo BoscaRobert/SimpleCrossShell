@@ -10,3 +10,5 @@
 11:24:44 PowerShell a executat:  split "\ "
 11:36:53 PowerShell a executat: ls -la 
 11:36:53 PowerShell a executat:  cat
+Sat Jun  6 04:36:00 PM EEST 2026 :  ls -l -a \n
+Sat Jun  6 04:36:38 PM EEST 2026 : echo lssad \n

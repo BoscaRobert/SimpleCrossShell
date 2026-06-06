@@ -10,10 +10,14 @@ if [ "$1" = "log" ] ; then
 fi
 
 #salvam directorul aplicatiei, dat prin al doilea atribut, in cazul in care directorul curent va fi schimbat de comanda
-og=$2
+og=$(realpath "$2") 
 
 #schimbam directorul catre directorul curent 
-cd "$3" || { echo "Eroare, Nu s-a putut schimba directorul">"$og"/outstream; exit 1 ; }
+cd "$3" || { 
+   echo "Eroare, Nu s-a putut schimba directorul" > "$og/outstream"
+    echo "TERM" > "$og/outstream"   # <-- unblocks the GUI
+    exit 1
+ }
 
 #creem fisierul in care va fi stocat directorul de dupa executia scriptului
 touch "$og"/current_directory
@@ -43,7 +47,7 @@ do
    # se Incepe lantul de comenzi, primul argument este comanda, al doilea optiunea de a loga sau nu comenziile
    #executate (0/1), al treilea argument reprezinta daca este primul din sir sau nu (1/0), al patrulea directorul original,
    #si al cincelea, daca e cazul, fisierul temporar
-   "$og"/Bash_Chain.sh "$com" $logheaza 1 "$og" &
+   "$og/Bash_Chain.sh" "$com" $logheaza 1 "$og" &
 done
 
 wait
