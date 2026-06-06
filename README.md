@@ -1,6 +1,5 @@
 This project is a Tcl/Tk GUI-based command executor with pipe chaining and inter-process communication via named pipes (FIFOs).
 
-
 ## Dependencies
 
 - **Tcl/Tk** — core runtime and GUI
@@ -12,8 +11,23 @@ This project is a Tcl/Tk GUI-based command executor with pipe chaining and inter
 sudo apt install tcl tk tdom
 ```
 
-### Running the program
+## Running the program
 To run the program, use the tcl shell to run the simpleCrossShell.tcl script
 ```bash
 tclsh simpleCrossShell.tcl
 ```
+
+## Platform Support
+Linux - supported
+
+Windows - work in progress
+
+## Localization
+romanian - available
+
+english - work in progress
+## Screenshot
+
+
+<img width="879" height="542" alt="Screenshot_20260606_172144" src="https://github.com/user-attachments/assets/61fd0cc4-97a5-4abe-829e-a715eede5c42" />
+
